@@ -24,7 +24,7 @@ depends: [
 ]
 
 build: [
-  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "build" "-p" name "-j" "1" "--verbose" "--no-buffer"]
 ]
 
 description: "Luv is a binding to libuv, the cross-platform C library that does
