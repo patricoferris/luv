@@ -120,16 +120,26 @@ let () = Jbuild_plugin.V1.send @@ {|
 ;   https://github.com/avsm/ocaml-yaml/blob/master/types/stubgen/jbuild#L20
 (rule
  (targets generate_types_step_2.exe)
- (deps (:c generate_types_step_2.c) helpers.h shims.h)
+ (deps (:c generate_types_step_2.c)
+  %{lib:ctypes:ctypes_complex_stubs.h}
+  %{lib:ctypes:ctypes_primitives.h}
+  %{lib:ctypes:ctypes_complex_stubs.h}
+  %{lib:ctypes:ctypes_cstubs_internals.h}
+  %{lib:ctypes:ctypes_ldouble_stubs.h}
+  %{lib:ctypes:ctypes_raw_pointer.h}
+  %{lib:ctypes:ctypes_managed_buffer_stubs.h} 
+    helpers.h shims.h)
  (action (bash "\
   if [ '%{ocaml-config:ccomp_type}' = 'msvc' ]; then \
     %{cc} %{c} \
-    -I '%{lib:ctypes:.}' \
+    -I `dirname %{lib:integers:ocaml_integers.h}` \
+    -I `dirname %{lib:ctypes:ctypes_cstubs_internals.h}` \
     -I %{ocaml_where} \
     |}^ i_option ^{| /Fe\"%{targets}\"; \
   else \
     %{cc} %{c} \
-    -I '%{lib:ctypes:.}' \
+    -I `dirname %{lib:integers:ocaml_integers.h}` \
+    -I `dirname %{lib:ctypes:ctypes_cstubs_internals.h}` \
     -I %{ocaml_where} \
     |}^ i_option ^{| -o %{targets}; \
   fi")))
